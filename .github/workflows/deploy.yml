@@ -1,0 +1,45 @@
+# 推荐：使用 GitHub 官方的 Pages Actions 部署纯静态网页
+name: Deploy static content to Pages
+
+on:
+  # 监听 main 分支的 push 事件
+  push:
+    branches: ["main"]
+
+  # 允许从 Actions 标签页手动触发部署
+  workflow_dispatch:
+
+# 设置 GITHUB_TOKEN 的权限，以允许部署到 GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 允许一个并发的部署
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # 单个部署任务，因为我们不构建，只需要部署
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 上传当前根目录下的所有文件 (包括 index.html, styles.css, main.js)
+          path: "."
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
