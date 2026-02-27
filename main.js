@@ -371,8 +371,12 @@ document.addEventListener("DOMContentLoaded", async () => {
           }
           if (item.dropdownText) {
             const text = document.createElement("div");
-            text.className = "dropdown-text";
-            text.textContent = t(item.dropdownText); // Use t() in case it's a translation key, or fallback to exact string
+            text.textContent = t(item.dropdownText);
+            if (item.dropdownTextType === "id-text") {
+              text.addEventListener("click", () => {
+                copyToClipboard(item.dropdownText);
+              });
+            }
             dropdown.appendChild(text);
           }
           wrapper.appendChild(dropdown);
