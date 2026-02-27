@@ -1,135 +1,427 @@
-/**
- * 配置区域 (Configuration Area)
- * 在这里修改你的个人信息和链接
- */
-const CONFIG = {
-  // 个人信息
-  name: "CoffCat",
-  bio: "保持热爱，奔赴山海",
-  avatar: "https://github.com/fluidicon.png", // 建议替换为你自己的图片 URL
+document.addEventListener("DOMContentLoaded", async () => {
+  // DOM Elements
+  const elements = {
+    themeToggle: document.getElementById("theme-toggle"),
+    themeIconSun: document.getElementById("theme-icon-sun"),
+    themeIconMoon: document.getElementById("theme-icon-moon"),
+    langToggle: document.getElementById("lang-toggle"),
+    app: document.getElementById("app"),
+    loading: document.getElementById("loading"),
+    errorMsg: document.getElementById("error-message"),
+    name: document.getElementById("name"),
+    bio: document.getElementById("bio"),
+    avatar: document.getElementById("avatar"),
+    bio: document.getElementById("bio"),
+    avatar: document.getElementById("avatar"),
+    portfolioSection: document.getElementById("portfolio-section"),
+    portfolioTitle: document.getElementById("portfolio-title"),
+    portfolioGrid: document.getElementById("portfolio-grid"),
+    sections: document.getElementById("sections"),
+    footer: document.getElementById("footer"),
+    year: document.getElementById("year"),
+    footerName: document.getElementById("footer-name"),
+    toast: document.getElementById("toast"),
+    modal: document.getElementById("modal"),
+    modalOverlay: document.getElementById("modal-overlay"),
+    modalClose: document.getElementById("modal-close"),
+    modalPrev: document.getElementById("modal-prev"),
+    modalNext: document.getElementById("modal-next"),
+    modalImg: document.getElementById("modal-img"),
+    modalCaption: document.getElementById("modal-caption"),
+    statusBar: document.getElementById("status-bar"),
+    statusText: document.getElementById("status-text"),
+  };
 
-  // 链接列表 (可按需增减)
-  links: [
-    {
-      title: "Blog",
-      url: "https://blog.ytaking.me/",
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`,
-    },
-    {
-      title: "GitHub",
-      url: "https://github.com/CoffCat6",
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>`,
-    },
-    {
-      title: "B站 (Bilibili)",
-      url: "https://space.bilibili.com/yourid",
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line></svg>`, // 占位 icon
-    },
-    {
-      title: "抖音 (Douyin)",
-      url: "https://www.douyin.com/user/yourid",
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>`, // 占位 icon (类似音符)
-    },
-    //取消注释下方代码即可使用邮件链接
-    {
-        title: "Email",
-        url: "mailto:zhreddie@outlook.com",
-        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`
-    }
-  ],
-};
+  let config = null;
+  let i18n = null;
 
-/**
- * 核心逻辑 (Core Logic)
- */
-document.addEventListener("DOMContentLoaded", () => {
-  // 1. 初始化用户信息
-  initProfile();
+  // Auto-detect browser language or load from localStorage
+  let currentLang =
+    localStorage.getItem("lang") ||
+    (navigator.language.startsWith("zh") ? "zh" : "en");
+  let currentTheme = localStorage.getItem("theme");
 
-  // 2. 渲染链接
-  renderLinks();
+  // Gallery State
+  let currentGalleryIndex = -1;
+  let isGalleryMode = false;
 
-  // 3. 初始化并绑定暗色模式逻辑
-  initTheme();
-
-  // 4. 更新底部版权时间 & 最后更新时间
-  updateFooterDates();
-});
-
-function initProfile() {
-  document.getElementById("profile-name").textContent = CONFIG.name;
-  document.getElementById("profile-bio").textContent = CONFIG.bio;
-  document.getElementById("profile-avatar").src = CONFIG.avatar;
-  document.title = `${CONFIG.name} | 导航页`;
-}
-
-function renderLinks() {
-  const container = document.getElementById("links-container");
-  container.innerHTML = ""; // 清空
-
-  CONFIG.links.forEach((link) => {
-    const a = document.createElement("a");
-    a.href = link.url;
-    a.className = "link-card";
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-
-    a.innerHTML = `
-            <div class="link-icon">${link.icon}</div>
-            <span class="link-title">${link.title}</span>
-        `;
-
-    container.appendChild(a);
-  });
-}
-
-function initTheme() {
-  const themeBtn = document.getElementById("theme-toggle");
-  const sunIcon = document.getElementById("sun-icon");
-  const moonIcon = document.getElementById("moon-icon");
-  const htmlEl = document.documentElement;
-
-  // 检查本地存储或系统偏好
-  const savedTheme = localStorage.getItem("theme");
-  const prefersDark =
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-  let currentTheme = "light";
-  if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-    currentTheme = "dark";
+  if (!currentTheme) {
+    currentTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
   }
 
-  // 设置初始状态
+  // Initialize Theme
+  const applyTheme = (theme) => {
+    document.documentElement.setAttribute("data-theme", theme);
+    if (theme === "dark") {
+      elements.themeIconSun.classList.remove("hidden");
+      elements.themeIconMoon.classList.add("hidden");
+    } else {
+      elements.themeIconSun.classList.add("hidden");
+      elements.themeIconMoon.classList.remove("hidden");
+    }
+    localStorage.setItem("theme", theme);
+    currentTheme = theme;
+  };
   applyTheme(currentTheme);
 
-  // 切换事件
-  themeBtn.addEventListener("click", () => {
-    currentTheme = currentTheme === "light" ? "dark" : "light";
-    applyTheme(currentTheme);
-    localStorage.setItem("theme", currentTheme);
+  elements.themeToggle.addEventListener("click", () => {
+    applyTheme(currentTheme === "light" ? "dark" : "light");
   });
 
-  function applyTheme(theme) {
-    htmlEl.setAttribute("data-theme", theme);
-    if (theme === "dark") {
-      sunIcon.classList.remove("hidden");
-      moonIcon.classList.add("hidden");
-    } else {
-      sunIcon.classList.add("hidden");
-      moonIcon.classList.remove("hidden");
+  elements.langToggle.addEventListener("click", () => {
+    currentLang = currentLang === "zh" ? "en" : "zh";
+    localStorage.setItem("lang", currentLang);
+    render();
+  });
+
+  // Translation Helper
+  const t = (key, params = {}) => {
+    if (!i18n || !i18n[currentLang] || !i18n[currentLang][key]) return key;
+    let text = i18n[currentLang][key];
+    for (const [k, v] of Object.entries(params)) {
+      text = text.replace(`{${k}}`, v);
     }
+    return text;
+  };
+
+  // Toast Logic
+  let toastTimeout;
+  const showToast = (msgKey) => {
+    elements.toast.textContent = t(msgKey);
+    elements.toast.classList.remove("hidden");
+    elements.toast.classList.add("show");
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      elements.toast.classList.remove("show");
+    }, 3000);
+  };
+
+  // Copy to Clipboard
+  const copyToClipboard = async (text) => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        showToast("copySuccess");
+      } else {
+        // Fallback approach
+        let textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand("copy");
+          showToast("copySuccess");
+        } catch (error) {
+          showToast("copyFailed");
+        }
+        textArea.remove();
+      }
+    } catch (err) {
+      console.error("Copy failed:", err);
+      showToast("copyFailed");
+    }
+  };
+
+  // Modal Logic
+  function openModal(imgSrc, caption = "", asGallery = false) {
+    elements.modalImg.src = imgSrc;
+    elements.modalCaption.textContent = caption ? t(caption) : "";
+    elements.modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden"; // Prevent background scrolling
+
+    isGalleryMode = asGallery;
+    if (isGalleryMode && config && config.portfolio) {
+      currentGalleryIndex = config.portfolio.indexOf(imgSrc);
+      elements.modalPrev.classList.remove("hidden");
+      elements.modalNext.classList.remove("hidden");
+      elements.modal.classList.add("gallery-mode");
+    } else {
+      currentGalleryIndex = -1;
+      elements.modalPrev.classList.add("hidden");
+      elements.modalNext.classList.add("hidden");
+      elements.modal.classList.remove("gallery-mode");
+    }
+    elements.modalClose.focus();
   }
-}
 
-function updateFooterDates() {
-  // 当前年份
-  document.getElementById("current-year").textContent =
-    new Date().getFullYear();
+  function closeModal() {
+    elements.modal.classList.add("hidden");
+    document.body.style.overflow = "";
+    currentGalleryIndex = -1;
+    isGalleryMode = false;
+    // Optionally clear src to stop loading if it was a heavy image
+    setTimeout(() => (elements.modalImg.src = ""), 300);
+  }
 
-  // 最后更新日期（使用构建时的 JS 运行时间作为粗略参考，在 Actions 部署静态页时，该 JS 会被打包并使用最新时间）
-  // 为了美观，格式化为 YYYY-MM-DD
-  const today = new Date();
-  const dateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  document.getElementById("last-updated-date").textContent = dateString;
-}
+  function navigateGallery(direction) {
+    if (!isGalleryMode || currentGalleryIndex === -1 || !config.portfolio)
+      return;
+
+    let newIndex = currentGalleryIndex + direction;
+    const total = config.portfolio.length;
+
+    // Loop around
+    if (newIndex >= total) newIndex = 0;
+    if (newIndex < 0) newIndex = total - 1;
+
+    currentGalleryIndex = newIndex;
+    // Update image fluidly
+    elements.modalImg.style.opacity = "0";
+    setTimeout(() => {
+      elements.modalImg.src = config.portfolio[currentGalleryIndex];
+      elements.modalCaption.textContent = ""; // Portfolios don't have distinct captions right now
+      elements.modalImg.style.opacity = "1";
+    }, 150);
+  }
+
+  elements.modalClose.addEventListener("click", closeModal);
+  elements.modalOverlay.addEventListener("click", closeModal);
+
+  // Gallery Navigation Listeners
+  elements.modalPrev.addEventListener("click", (e) => {
+    e.stopPropagation();
+    navigateGallery(-1);
+  });
+  elements.modalNext.addEventListener("click", (e) => {
+    e.stopPropagation();
+    navigateGallery(1);
+  });
+
+  // Keyboard accessibility for Modal
+  document.addEventListener("keydown", (e) => {
+    if (!elements.modal.classList.contains("hidden")) {
+      if (e.key === "Escape") closeModal();
+      if (e.key === "ArrowLeft") navigateGallery(-1);
+      if (e.key === "ArrowRight") navigateGallery(1);
+    }
+  });
+
+  // Render Data to DOM
+  const render = () => {
+    if (!config || !i18n) return;
+
+    // Set Language toggle text
+    elements.langToggle.textContent = currentLang === "zh" ? "EN" : "中文";
+
+    // Set Meta tags
+    document.documentElement.lang = currentLang;
+    document.title = t("pageTitle", { name: config.name });
+    document.getElementById("meta-desc").content = t("pageDescription", {
+      name: config.name,
+      bio: config.bio[currentLang],
+    });
+    document.getElementById("og-title").content = t("pageTitle", {
+      name: config.name,
+    });
+    document.getElementById("og-desc").content = t("pageDescription", {
+      name: config.name,
+      bio: config.bio[currentLang],
+    });
+
+    // Update App Texts
+    elements.name.textContent = config.name;
+    elements.footerName.textContent = config.name;
+    elements.bio.textContent = config.bio[currentLang] || config.bio["en"];
+
+    // Handle avatar failure gracefully by not crashing
+    if (config.avatar) {
+      elements.avatar.src = config.avatar;
+      elements.avatar.onerror = () => {
+        elements.avatar.src =
+          "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2QxZDVkYiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkeT0iLjM1ZW0iIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IiM2YjcyODAiPj88L3RleHQ+PC9zdmc+"; // placeholder gray square
+      };
+    }
+
+    // Status Bar
+    const dateStr = config.buildTime
+      ? new Date(config.buildTime).toISOString().split("T")[0]
+      : new Date().toISOString().split("T")[0];
+
+    let statusHtml = t("updatedAt", { date: dateStr });
+    if (config.status && config.status[currentLang]) {
+      statusHtml += t("recentlyDoing", { status: config.status[currentLang] });
+    }
+    elements.statusText.textContent = statusHtml;
+    elements.statusBar.style.display = "block";
+
+    // Render Portfolio (if configured)
+    if (config.portfolio && config.portfolio.length > 0) {
+      elements.portfolioTitle.textContent = t("portfolioTitle");
+      elements.portfolioGrid.innerHTML = "";
+
+      config.portfolio.forEach((imgUrl, index) => {
+        const imgWrap = document.createElement("div");
+        imgWrap.className = "portfolio-item";
+        // Add staggered entrance animations extending beyond global card index if desired
+        imgWrap.style.animationDelay = `${0.2 + index * 0.1}s`;
+
+        const imgStr = document.createElement("img");
+        imgStr.src = imgUrl;
+        imgStr.alt = `Portfolio shot ${index + 1}`;
+        imgStr.loading = "lazy"; // Enhance performance
+
+        // Add modal logic directly to images - open as Gallery Mode
+        imgWrap.addEventListener("click", () => openModal(imgUrl, "", true));
+
+        imgWrap.appendChild(imgStr);
+        elements.portfolioGrid.appendChild(imgWrap);
+      });
+
+      elements.portfolioSection.classList.remove("hidden");
+    } else {
+      elements.portfolioSection.classList.add("hidden");
+    }
+
+    // Render Sections
+    elements.sections.innerHTML = "";
+    let globalCardIndex = 0; // for continuous staggering across sections
+    config.sections.forEach((section) => {
+      const sectionEl = document.createElement("div");
+      sectionEl.className = "section";
+
+      const titleEl = document.createElement("h2");
+      titleEl.className = "section-title";
+      titleEl.textContent = t(section.titleKey);
+      sectionEl.appendChild(titleEl);
+
+      const itemsEl = document.createElement("div");
+      itemsEl.className = "section-items";
+
+      section.items.forEach((item) => {
+        let card;
+        const hasDropdown = item.dropdownImage || item.dropdownText;
+        const wrapper = hasDropdown ? document.createElement("div") : null;
+
+        if (wrapper) {
+          wrapper.className = "card-wrapper";
+          wrapper.style.animationDelay = `${0.1 + globalCardIndex * 0.08}s`;
+        }
+
+        if (item.type === "link") {
+          card = document.createElement("a");
+          card.href = item.url;
+          card.target = "_blank";
+          card.rel = "noopener noreferrer";
+        } else {
+          card = document.createElement("button");
+        }
+
+        card.className = "card";
+        if (!wrapper) {
+          card.style.animationDelay = `${0.1 + globalCardIndex * 0.08}s`;
+        }
+        globalCardIndex++;
+
+        // Left/Main part of the card
+        const cardContentHtml = `
+                    <div class="card-icon">${item.icon}</div>
+                    <span class="card-title">${t(item.titleKey)}</span>
+                `;
+
+        // If it has a dropdown, we append a toggle button HTML
+        if (hasDropdown) {
+          card.innerHTML =
+            cardContentHtml +
+            `
+                        <button class="card-toggle" aria-label="Toggle Dropdown">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                    `;
+        } else {
+          card.innerHTML = cardContentHtml;
+        }
+
+        // Handle Main Card Clicks
+        card.addEventListener("click", (e) => {
+          // Stop if the toggle button specifically was clicked
+          if (e.target.closest(".card-toggle")) {
+            e.preventDefault();
+            if (wrapper) wrapper.classList.toggle("expanded");
+            return;
+          }
+
+          // Execute primary action
+          if (item.type === "copy") {
+            copyToClipboard(item.copyText);
+          } else if (item.type === "qrcode") {
+            openModal(item.qrcodeImage, item.qrcodeCaption);
+          }
+          // if item.type === 'link', the 'a' tag native behavior handles the navigation automatically.
+        });
+
+        if (wrapper) {
+          wrapper.appendChild(card);
+
+          // Build Dropdown
+          const dropdown = document.createElement("div");
+          dropdown.className = "card-dropdown";
+
+          if (item.dropdownImage) {
+            const img = document.createElement("img");
+            img.src = item.dropdownImage;
+            img.className = "dropdown-img";
+            img.alt = "QR Code";
+            dropdown.appendChild(img);
+          }
+          if (item.dropdownText) {
+            const text = document.createElement("div");
+            text.className = "dropdown-text";
+            text.textContent = t(item.dropdownText); // Use t() in case it's a translation key, or fallback to exact string
+            dropdown.appendChild(text);
+          }
+          wrapper.appendChild(dropdown);
+          itemsEl.appendChild(wrapper);
+        } else {
+          itemsEl.appendChild(card);
+        }
+      });
+
+      sectionEl.appendChild(itemsEl);
+      elements.sections.appendChild(sectionEl);
+    });
+
+    elements.year.textContent = new Date().getFullYear();
+  };
+
+  // Main Run
+  try {
+    const [configRes, i18nRes] = await Promise.all([
+      fetch("config.json"),
+      fetch("i18n.json"),
+    ]);
+
+    if (!configRes.ok || !i18nRes.ok)
+      throw new Error("Failed to fetch config data");
+
+    config = await configRes.json();
+    i18n = await i18nRes.json();
+
+    // Check Analytics Injection
+    if (config.analytics && config.analytics.enabled) {
+      const script = document.createElement("script");
+      script.defer = true;
+      script.src = config.analytics.scriptSrc;
+      if (config.analytics.websiteId) {
+        script.dataset.domain = config.analytics.websiteId;
+      }
+      document.head.appendChild(script);
+    }
+
+    elements.loading.classList.add("hidden");
+    elements.app.classList.remove("hidden");
+    elements.footer.classList.remove("hidden");
+    render();
+  } catch (err) {
+    console.error(err);
+    elements.loading.classList.add("hidden");
+    elements.errorMsg.textContent =
+      "配置加载失败，请检查网络或刷新重试。 / Failed to load config.";
+    elements.errorMsg.classList.remove("hidden");
+  }
+});

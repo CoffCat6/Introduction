@@ -2,7 +2,7 @@
 name: Deploy static content to Pages
 
 on:
-  # 监听 main 分支的 push 事件
+  # 监听 master 分支的 push 事件
   push:
     branches: ["master"]
 
@@ -43,3 +43,13 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # === 如果你想改用 peaceiris/actions-gh-pages 部署到 gh-pages 分支 ===
+      # 请删除上方的 environment 配置，并屏蔽上方的 "Setup Pages", "Upload artifact", "Deploy to GitHub Pages" 步骤。
+      # 然后启用下方的步骤，并确保仓库设置中 Pages 源切换为 "Deploy from a branch" (gh-pages 分支)。
+      #
+      # - name: Deploy to gh-pages branch
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./
