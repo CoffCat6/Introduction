@@ -11,8 +11,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     name: document.getElementById("name"),
     bio: document.getElementById("bio"),
     avatar: document.getElementById("avatar"),
-    bio: document.getElementById("bio"),
-    avatar: document.getElementById("avatar"),
     portfolioSection: document.getElementById("portfolio-section"),
     portfolioTitle: document.getElementById("portfolio-title"),
     portfolioGrid: document.getElementById("portfolio-grid"),

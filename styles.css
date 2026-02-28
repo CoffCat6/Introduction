@@ -17,6 +17,8 @@
   --secondary: #f472b6; /* Hot Pink */
   --tertiary: #fbbf24; /* Amber */
   --quaternary: #34d399; /* Mint */
+  --border-color: #e2e8f0;
+  --orb-2: #f472b6;
 
   --shadow-sm: 2px 2px 0px 0px #1e293b;
   --shadow-md: 4px 4px 0px 0px #1e293b;
@@ -42,6 +44,7 @@
   --secondary: #f472b6;
   --tertiary: #fbbf24;
   --quaternary: #34d399;
+  --border-color: #334155;
 
   --shadow-sm: 2px 2px 0px 0px #f8fafc;
   --shadow-md: 4px 4px 0px 0px #f8fafc;
