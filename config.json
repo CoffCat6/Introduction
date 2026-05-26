@@ -37,23 +37,15 @@
           "type": "link",
           "titleKey": "bilibili",
           "icon": "<svg viewBox='0 0 24 24' width='24' height='24' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='5' width='20' height='14' rx='2' ry='2'/><path d='M7 5l3-3'/><path d='M17 5l-3-3'/></svg>",
-          "url": "https://space.bilibili.com/<id>"
+          "url": "https://space.bilibili.com/473335195?spm_id_from=333.1007.0.0"
         },
         {
           "type": "link",
           "titleKey": "douyin",
           "icon": "<svg viewBox='0 0 24 24' width='24' height='24' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'><path d='M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5v3a8 8 0 0 1-5-2.9'/></svg>",
-          "url": "https://www.douyin.com/user/<id>",
-          "dropdownImage": "assets/qrcode-wechat.png",
+          "url": "https://www.douyin.com/user/MS4wLjABAAAAe-vbCnKjeVed5s7iZwGrHFpQExB6AKVd-d21lOjuRjU?from_tab_name=main",
+          "dropdownImage": "assets/qrcode-douyin.png",
           "dropdownText": "douyinDropdown"
-        },
-        {
-          "type": "link",
-          "titleKey": "officialAccount",
-          "icon": "<svg viewBox='0 0 24 24' width='24' height='24' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M16 12l-4-4-4 4M12 8v8'/></svg>",
-          "url": "https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=Mzk0NTQzMzk0Nw==&scene=11&subscene=100&from=singlemessage&isappinstalled=0&uin=&key=&devicetype=Windows+10+x64&version=4.1.9&lang=zh_CN&winzoom=1",
-          "dropdownImage": "assets/qrcode-wechat.png",
-          "dropdownText": "officialAccountDropdown"
         }
       ]
     },
